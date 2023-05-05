@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<title>Stock Page</title>
+</head>
+
+<body>
+	<nav class="navbar navbar-expanded navbar-light bg-light">
+		<ul class="nav nav-pills">
+			<li class="nav-item"> <a class="nav-link" href="welcome">Home</a> </li>
+			<li class="nav-item"> <a class="nav-link" href="AllContacts">All Contacts</a> </li>
+			<li class="nav-item"> <a class="nav-link" href="MyContacts">My Contacts</a> </li>
+			<li class="nav-item"> <a class="nav-link" href="AddContact">Add Contact</a> </li>
+			<li class="nav-item active"> <a class="nav-link active" href="Stocks">Stocks</a> </li>
+			<li class="nav-item"> <a class="nav-link" href="logout">LOG OUT</a> </li>
+		</ul>
+	</nav>
+	<div class="row">
+		<div class="col-md-1"></div>
+		<div class="col-md-10">
+			<br>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<center>Welcome to Stock Page</center>
+				</div>
+			<br>
+			</div>
+			<div class="row">
+				<div class="col">
+					<table class="table table-bordered table-hover">
+						<tbody>
+							<tr>
+								<td class="col-md-6">Company</td>
+								<td class="col-md-6">
+									<div class="form-group">
+										<select name="Company" id="ticker">
+											<option value="MSFT">Microsoft</option>
+											<option value="BA">Boeing Company</option>
+											<option value="AAPL">Apple Inc</option>
+											<option value="AMZN">Amazon</option>
+											<option value="NVDA">NVIDIA Corporation</option>
+										</select>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<button type="button" id="data">Get Data</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div>
+				<table class="table" id="StockData">
+					<thead>
+						<tr>
+							<th scope="col">Company-MetaData</th>
+							<th scope="col">Stock-Info</th>
+						</tr>
+					</thead>
+					<tbody>
+                        <tr>
+                            <td>
+                                <textarea class="form-control rounded-0" id="meta" rows="10"></textarea>
+                            </td>
+                            <td>
+                                <textarea class="form-control rounded-0" id="daily" rows="10"></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+				</table>
+			</div>
+		</div>
+		<div class="col-md-1"></div>
+    </div>
+    <style>
+        #meta,
+        #daily{
+            display: none;
+        }
+    </style>
+	<script>
+        $(document).ready(getStocks);
+		function getStocks(){
+			$("#data").click(function(event) {
+				event.preventDefault();
+				key = 'NFLEFMPVQIP7CARG';
+				ticker = $('#ticker').val();
+				$.ajax({
+					async: false,
+					url: 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + ticker + '&apikey=' + key,
+					type: 'get',
+					success: beautify
+				});
+			});
+		}
+        function beautify(data){
+			try{
+				var unformatted1 = JSON.stringify(data['Meta Data'])
+				var obj1 = JSON.parse(unformatted1);
+				var formatted1 = JSON.stringify(obj1, undefined, 4);
+				var unformatted2 = JSON.stringify(data['Time Series (Daily)'])
+				var obj2 = JSON.parse(unformatted2);
+				var formatted2 = JSON.stringify(obj2, undefined, 4);
+				$('#meta').val(formatted1), $('#daily').val(formatted2);
+				$('#meta').show(),$('#daily').show();
+			}
+            catch(exeption){
+				$('#meta').hide(),$('#daily').hide();
+				var issue = 'Too many API requests/AJAX calls';
+				var fix1 = 'Wait a moment before submitting your current data request again';
+				var fix2 = 'Reload the page and resend your request';
+				var fix3 = 'Try again later if the issue persists';
+				alert(`Error: ${issue}. Please try the following:\n\t ${fix1}\n\t ${fix2}\n\t ${fix3}`);
+			}
+        }
+	</script>
+</body>
+
+</html>

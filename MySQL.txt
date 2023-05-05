@@ -1,0 +1,10 @@
+Abaas Kilas, CSCI 4131, Spring 2022
+
+x500: kilas002
+acc_name = 
+acc_login: user
+acc_password: pass
+
+User and Database Name: C4131SN22U32  
+Password: 1074
+Command: mysql -uC4131SN22U32 -hcse-mysql-classes-01.cse.umn.edu -P3306 -p C4131SN22U32

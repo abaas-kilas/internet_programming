@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<title>Login Page</title>
+	<style type="text/css">
+		.jumbotron {
+			text-align: center;
+			background: rgb(0, 123, 255) !important;
+		}
+		.jumbotron p{
+			font-size: 14pt;
+		}
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+			text-align: center;
+		}
+		.alert {
+			display: inline-block;
+			width: 36%;
+		}
+		button {
+			margin: 10%;
+		}
+		input[type=text],
+		input[type=password] {
+			padding: 5px;
+			display: inline-block;
+		}
+		#error{
+			color: lightcoral;
+			display: none;
+		}
+		#login {
+			padding: 16px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="jumbotron">
+		<center>
+			<h1> Login Page</h1>
+		</center>
+		<p> Enter login details below. Both fields required and are case-sensitive</p>
+	</div>
+	<center>
+		<div class="alert alert-danger" role="alert" id="error"></div>
+	</center>
+	<form action="/details" method="post" id="form">
+		<div id="login">
+			<label for="user"><em>Username:</em></label>
+			&nbsp;
+			<input type="text" name="user" required id="user">
+			&nbsp; &nbsp; &nbsp;
+			<label for="pass"><em>Password:</em></label>
+			&nbsp;
+			<input type="password" name="pass" required id="pass">
+		</div>
+		<button type="submit" class="btn btn-lg btn-primary">Log In</button>
+	</form>
+	<script>
+	$("#form").submit(function(event) {
+		event.preventDefault();
+		$.ajax({
+			url: '/details',
+			type: 'post',
+			data: $('#form').serialize(),
+			statusCode: {
+				200: function() {
+					window.location.href = '/AllContacts';
+				},
+				401: function() {
+					$('#pass').val(''), $('#user').val('');
+					$('#error').html("Wrong username or password. Please try again."), $('#error').show();
+				}
+			}
+		});
+	})
+	</script>
+</body>
+
+</html>
